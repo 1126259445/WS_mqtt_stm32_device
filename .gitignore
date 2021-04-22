@@ -1,0 +1,16 @@
+
+DebugConfig/
+
+Listings/
+
+Objects/
+*.o
+*.bin
+*.hex
+*.d
+
+*.Administrator
+
+*.uvoptx
+
+*.uvprojx
