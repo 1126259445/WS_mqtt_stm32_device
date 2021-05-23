@@ -24,7 +24,6 @@ struct netif enc28j60_netif;  //定义网络接口
 
 void LwIP_Config (void)
 {   
- 
     IP4_ADDR(&ipaddr, 192, 168, 1, 168);  		//设置本地ip地址
     IP4_ADDR(&gw, 192, 168, 1, 1);			    //网关
     IP4_ADDR(&netmask, 255, 255, 255, 0);		//子网掩码	 
@@ -50,7 +49,7 @@ void net_process(void *pvParameter)
 	
 	while(1)
 	{
-		vTaskDelay(10);
+		vTaskDelay(5);
 		
 		 /*网卡输入*/
 		 ethernetif_input(&enc28j60_netif); 
@@ -68,6 +67,6 @@ void net_process(void *pvParameter)
 
 void net_task()
 {
-	xTaskCreate(net_process,"net_process",configMINIMAL_STACK_SIZE*10,NULL,tskIDLE_PRIORITY + 4,NULL);
+	xTaskCreate(net_process,"net_process",configMINIMAL_STACK_SIZE*20,NULL,tskIDLE_PRIORITY + 4,NULL);
 }
 

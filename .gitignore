@@ -8,6 +8,9 @@ Objects/
 *.bin
 *.hex
 *.d
+*.txt
+*.ini
+*.scvd
 
 *.Administrator
 

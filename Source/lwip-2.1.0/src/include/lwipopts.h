@@ -54,11 +54,11 @@
 #define LWIP_DHCP                       1
 
 /* Minimal changes to opt.h required for tcp unit tests: */
-#define MEM_SIZE                        20*1024
-#define TCP_SND_QUEUELEN                20
+#define MEM_SIZE                        5*1024
+#define TCP_SND_QUEUELEN                10
 #define MEMP_NUM_TCP_SEG                TCP_SND_QUEUELEN
-#define TCP_SND_BUF                     (10 * TCP_MSS)
-#define TCP_WND                         (5 * TCP_MSS)
+#define TCP_SND_BUF                     (2 * TCP_MSS)
+#define TCP_WND                         (2 * TCP_MSS)
 #define LWIP_WND_SCALE                  0
 #define TCP_RCV_SCALE                   0
 #define PBUF_POOL_SIZE                  10 /* pbuf tests need ~200KByte */

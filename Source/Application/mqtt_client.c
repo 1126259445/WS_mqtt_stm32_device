@@ -37,7 +37,8 @@
 
 
 #define DEVECE_ID "DEV00001"
-#define MQ_PORT 53571
+//#define MQ_PORT 53571
+#define MQ_PORT 1883
 
 #if LWIP_TCP
 
@@ -76,10 +77,11 @@ static void
 mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags)
 {
   const struct mqtt_connect_client_info_t* client_info = (const struct mqtt_connect_client_info_t*)arg;
-  LWIP_UNUSED_ARG(data);
-
-//  SEGGER_RTT_printf(0,"MQTT client \"%s\" data cb: len %d, flags %d\n", client_info->client_id,
-//          (int)len, (int)flags);
+  //LWIP_UNUSED_ARG(data);
+	
+  SEGGER_RTT_printf(0,"MQTT client \"%s\" mqtt_incoming_data_cb: len %d, flags %d\n", client_info->client_id,
+          (int)len, (int)flags);
+  SEGGER_RTT_printf(0,"%s",data);
 }
 
 static void
@@ -87,8 +89,8 @@ mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len)
 {
   const struct mqtt_connect_client_info_t* client_info = (const struct mqtt_connect_client_info_t*)arg;
 
-//  SEGGER_RTT_printf(0,"MQTT client \"%s\" publish cb: topic %s, len %d\n", client_info->client_id,
-//          topic, (int)tot_len);
+  SEGGER_RTT_printf(0,"MQTT client \"%s\" mqtt_incoming_publish_cb: topic %s, len %d\n", client_info->client_id,
+          topic, (int)tot_len);
 }
 
 static void
@@ -96,7 +98,7 @@ mqtt_request_cb(void *arg, err_t err)
 {
   const struct mqtt_connect_client_info_t* client_info = (const struct mqtt_connect_client_info_t*)arg;
 
-  //SEGGER_RTT_printf(0,"MQTT client \"%s\" request cb: err %d\n", client_info->client_id, (int)err);
+  SEGGER_RTT_printf(0,"MQTT client \"%s\" request cb: err %d\n", client_info->client_id, (int)err);
 }
 
 static void
@@ -105,11 +107,19 @@ mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t st
   const struct mqtt_connect_client_info_t* client_info = (const struct mqtt_connect_client_info_t*)arg;
   LWIP_UNUSED_ARG(client);
 
-  //SEGGER_RTT_printf(0,"MQTT client \"%s\" connection cb: status %d\n", client_info->client_id, (int)status);
+  SEGGER_RTT_printf(0,"MQTT client \"%s\" connection cb: status %d\n", client_info->client_id, (int)status);
 
   if (status == MQTT_CONNECT_ACCEPTED) {
+	  
+	  mqtt_set_inpub_callback(mqtt_client,
+          mqtt_incoming_publish_cb,
+          mqtt_incoming_data_cb,
+          LWIP_CONST_CAST(void*, &mqtt_client_info));
+	  
+	char topic[14] = {DEVECE_ID};
+	strcat(topic,"_DOWN");
     mqtt_sub_unsub(client,
-            "down", 0,
+            topic, 0,
             mqtt_request_cb, LWIP_CONST_CAST(void*, client_info),
             1);
 //    mqtt_sub_unsub(client,
@@ -133,7 +143,7 @@ mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t st
 static void mqtt_pub_request_cb(void *arg, err_t result)
 {
   if(result != ERR_OK) {
-  //  SEGGER_RTT_printf(0,"Publish result: %d\n", result);
+    SEGGER_RTT_printf(0,"Publish result: %d\n", result);
   }
 }
 
@@ -156,15 +166,10 @@ void mqtt_publish_data(char *pub_payload)
 void mqtt_example_init(void)
 {
 	
- IP4_ADDR(&mqtt_ip, 103, 46, 128, 45);  		//设置连接的IP地址
-	
+ //IP4_ADDR(&mqtt_ip, 103, 46, 128, 45);  		//设置连接的IP地址
+	IP4_ADDR(&mqtt_ip, 192, 168, 1, 100);  		//设置连接的IP地址
 #if LWIP_TCP
   mqtt_client = mqtt_client_new();
-
-  mqtt_set_inpub_callback(mqtt_client,
-          mqtt_incoming_publish_cb,
-          mqtt_incoming_data_cb,
-          LWIP_CONST_CAST(void*, &mqtt_client_info));
 
   mqtt_client_connect(mqtt_client,
           &mqtt_ip, MQ_PORT,
