@@ -36,10 +36,29 @@
 extern "C" {
 #endif
 
-void mqtt_example_init(void);
-void example_publish();
-void joson_create_uav_data_send(void);
+#define MSG_POWER_ON_ID 5001
+#define MSG_HRAET_ID 5002
+#define MSG_DATA_UP_ID 5003
+#define MSG_DATA_DOWN_ID 5004
 
+#define MSG_POWER_ON_ACK_ID 6001
+#define MSG_HRAET_ACK_ID 6002
+#define MSG_DATA_UP_ACK_ID 6003
+#define MSG_DATA_DOWN_ACK_ID 6004
+
+
+typedef struct 
+{
+    uint32_t  Switch ;
+	int32_t Variable_Val_0 ;
+	int32_t Variable_Val_1 ;
+	int32_t Variable_Val_2 ;
+}mqtt_cmd_struct;
+
+
+void mqtt_example_init(void);
+void joson_create_uav_data_send(void);
+int json_parse(const uint8_t *buf, uint16_t length);
 
 extern mqtt_client_t* mqtt_client;
 #ifdef __cplusplus

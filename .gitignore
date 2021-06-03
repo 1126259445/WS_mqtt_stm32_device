@@ -4,6 +4,7 @@ DebugConfig/
 Listings/
 
 Objects/
+
 *.o
 *.bin
 *.hex
@@ -16,4 +17,3 @@ Objects/
 
 *.uvoptx
 
-*.uvprojx

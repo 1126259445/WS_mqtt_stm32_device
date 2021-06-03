@@ -6,7 +6,8 @@
 #include "lwip/init.h"
 #include "lwip/ip4_addr.h"
 #include "lwip/timeouts.h"
-
+#include "lwip/apps/mqtt.h"
+#include "lwip/apps/mqtt_priv.h"
 
 #include "mqtt_client.h"
 #include "SEGGER_RTT.h"
@@ -21,7 +22,7 @@ static ip_addr_t ipaddr, netmask, gw; //定义IP地址
 struct netif enc28j60_netif;  //定义网络接口
 
 
-
+/*本机网卡配置添加*/
 void LwIP_Config (void)
 {   
     IP4_ADDR(&ipaddr, 192, 168, 1, 168);  		//设置本地ip地址
@@ -40,7 +41,7 @@ void LwIP_Config (void)
 }
 
 
-
+/*网络数据处理*/
 void net_process(void *pvParameter)
 {
 	uint32_t last_mqtt_time = 0;
@@ -51,15 +52,25 @@ void net_process(void *pvParameter)
 	{
 		vTaskDelay(5);
 		
-		 /*网卡输入*/
-		 ethernetif_input(&enc28j60_netif); 
-		 /* 无操作系统超时检测 */
+		/*网卡输入*/
+		ethernetif_input(&enc28j60_netif); 
+		/* 无操作系统超时检测 */
 		sys_check_timeouts();
 		
-		if(last_mqtt_time + 1000 < uwTick)
+		if(last_mqtt_time + 500 < uwTick)
 		{
 			last_mqtt_time = uwTick;
-			joson_create_uav_data_send();
+
+			if(mqtt_client_is_connected(mqtt_client))
+			{
+				joson_create_uav_data_send();
+			}
+			else
+			{
+				mqtt_disconnect(mqtt_client);
+				mqtt_client_free(mqtt_client);
+				mqtt_example_init();
+			}
 		}
 	}
 }
@@ -67,6 +78,6 @@ void net_process(void *pvParameter)
 
 void net_task()
 {
-	xTaskCreate(net_process,"net_process",configMINIMAL_STACK_SIZE*20,NULL,tskIDLE_PRIORITY + 4,NULL);
+	xTaskCreate(net_process,"net_process",configMINIMAL_STACK_SIZE*30,NULL,tskIDLE_PRIORITY + 4,NULL);
 }
 
