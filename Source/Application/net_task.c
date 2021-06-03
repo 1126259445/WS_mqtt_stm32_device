@@ -44,7 +44,9 @@ void LwIP_Config (void)
 /*网络数据处理*/
 void net_process(void *pvParameter)
 {
+	uint32_t last_send_time = 0;
 	uint32_t last_mqtt_time = 0;
+	
 	LwIP_Config();
 	mqtt_example_init();
 	
@@ -57,21 +59,27 @@ void net_process(void *pvParameter)
 		/* 无操作系统超时检测 */
 		sys_check_timeouts();
 		
-		if(last_mqtt_time + 500 < uwTick)
+		/*MQTT连接成功后的操作*/
+		if(mqtt_client_is_connected(mqtt_client))
 		{
-			last_mqtt_time = uwTick;
-
-			if(mqtt_client_is_connected(mqtt_client))
+			if(last_send_time + 500 < uwTick)
 			{
 				joson_create_uav_data_send();
 			}
-			else
+		}
+		else
+		{
+			/*MQTT连接断开后 间隔3S尝试重连 */
+			if(last_mqtt_time + 3000 < uwTick)
 			{
+				last_mqtt_time = uwTick;
+		
 				mqtt_disconnect(mqtt_client);
 				mqtt_client_free(mqtt_client);
 				mqtt_example_init();
-			}
+			}	
 		}
+		
 	}
 }
 
