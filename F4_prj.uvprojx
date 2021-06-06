@@ -412,6 +412,11 @@
               <FileType>1</FileType>
               <FilePath>.\Source\Application\mqtt_client.c</FilePath>
             </File>
+            <File>
+              <FileName>monitor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\Application\monitor.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -436,6 +441,11 @@
               <FileName>spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Source\Drivers\spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>watchdog.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\Drivers\watchdog.c</FilePath>
             </File>
           </Files>
         </Group>

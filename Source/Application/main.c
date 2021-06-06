@@ -1,11 +1,13 @@
 #include "stm32f4xx_it.h"
 #include "usart.h"
 #include "main.h"
+#include "watchdog.h"
 #include "tick.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "comm.h"
 #include "net_task.h"
+#include "monitor.h"
 
 #include "usbd_conf.h"
 #include "usbd_usr.h"
@@ -20,6 +22,7 @@ void InitTask(void *pvParameter)
 {
 	net_task();
 	common();
+	monitor();
 	vTaskDelete(NULL);		/* 删除初始化任务 */
 }
 
@@ -29,6 +32,7 @@ int main()
 	uart2_init(115200);
 	uart3_init(115200);
 	TickInit();
+	IWDG_Init(4,500); //与分频数为64,重载值为500,溢出时间为1s	
 	
 //	USBD_Init(&USB_OTG_dev,
 //#ifdef USE_USB_OTG_HS 
