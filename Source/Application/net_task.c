@@ -46,6 +46,7 @@ void net_process(void *pvParameter)
 {
 	uint32_t last_send_time = 0;
 	uint32_t last_mqtt_time = 0;
+	uint32_t last_netif_time = 0;
 	
 	LwIP_Config();
 	mqtt_example_init();
@@ -64,13 +65,14 @@ void net_process(void *pvParameter)
 		{
 			if(last_send_time + 500 < uwTick)
 			{
+				last_send_time = uwTick;
 				joson_create_uav_data_send();
 			}
 		}
 		else
 		{
-			/*MQTT连接断开后 间隔3S尝试重连 */
-			if(last_mqtt_time + 3000 < uwTick)
+			/*MQTT连接断开后 间隔1S尝试重连 */
+			if(last_mqtt_time + 1000 < uwTick)
 			{
 				last_mqtt_time = uwTick;
 		
@@ -80,6 +82,32 @@ void net_process(void *pvParameter)
 			}	
 		}
 		
+		/*网络连接状态监测*/
+		if (netif_is_link_up(&enc28j60_netif))
+		{
+			//printf("netif is link up\r\n");
+			/* When the netif is fully configured this function must be called 当netif完全配置时，必须调用此函数*/
+			//netif_set_up(&enc28j60_netif);
+
+		}
+		else
+		{
+			/*网络断开连接后间隔500ms重新初始化*/
+			if( last_netif_time + 500 < uwTick)
+			{
+				last_netif_time = uwTick;
+				
+				printf("netif set down\r\n");
+				netif_set_up(&enc28j60_netif);
+				/* When the netif link is down this function must be called 当netif链接断开时，必须调用这个函数*/
+				netif_set_down(&enc28j60_netif);
+				/*移除网卡重新配置*/
+				netif_remove(&enc28j60_netif);
+				LwIP_Config();
+				
+			}
+		}		
+
 	}
 }
 

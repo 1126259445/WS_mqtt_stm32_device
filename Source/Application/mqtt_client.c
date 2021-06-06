@@ -41,7 +41,7 @@
 #endif
 
 #ifndef MQ_PORT
-#define MQ_PORT 1883  //53571
+#define MQ_PORT 53571 //1883
 #endif 
 
 #if LWIP_TCP
@@ -71,7 +71,7 @@ static const struct mqtt_connect_client_info_t mqtt_client_info =
   "STM32MQ_DEVICE",
   NULL, /* user */
   NULL, /* pass */
-  100,  /* keep alive */
+  10,  /* keep alive */
   NULL, /* will_topic */
   NULL, /* will_msg */
   0,    /* will_qos */
@@ -177,8 +177,8 @@ void mqtt_publish_data(char *pub_payload)
 
 void mqtt_example_init(void)
 {
- //IP4_ADDR(&mqtt_ip, 103, 46, 128, 45);  		//设置连接的IP地址
-	IP4_ADDR(&mqtt_ip, 192, 168, 1, 100);  		//设置连接的IP地址
+ IP4_ADDR(&mqtt_ip, 103, 46, 128, 45);  		//设置连接的IP地址
+//	IP4_ADDR(&mqtt_ip, 192, 168, 1, 100);  		//设置连接的IP地址
 #if LWIP_TCP
   mqtt_client = mqtt_client_new();
 
