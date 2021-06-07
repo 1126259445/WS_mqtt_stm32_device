@@ -417,6 +417,11 @@
               <FileType>1</FileType>
               <FilePath>.\Source\Application\monitor.c</FilePath>
             </File>
+            <File>
+              <FileName>data_process.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\Application\data_process.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

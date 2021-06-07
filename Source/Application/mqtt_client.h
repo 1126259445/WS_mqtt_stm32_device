@@ -54,7 +54,7 @@ typedef struct
 	int32_t Variable_Val_1 ;
 	int32_t Variable_Val_2 ;
 }mqtt_cmd_struct;
-
+extern mqtt_cmd_struct mqtt_cmd;
 
 void mqtt_example_init(void);
 void joson_create_uav_data_send(void);

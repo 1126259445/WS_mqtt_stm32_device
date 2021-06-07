@@ -8,6 +8,7 @@
 #include "comm.h"
 #include "net_task.h"
 #include "monitor.h"
+#include "data_process.h"
 
 #include "usbd_conf.h"
 #include "usbd_usr.h"
@@ -23,6 +24,7 @@ void InitTask(void *pvParameter)
 	net_task();
 	common();
 	monitor();
+	data_process();
 	vTaskDelete(NULL);		/* 删除初始化任务 */
 }
 
