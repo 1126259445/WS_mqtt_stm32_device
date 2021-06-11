@@ -422,6 +422,11 @@
               <FileType>1</FileType>
               <FilePath>.\Source\Application\data_process.c</FilePath>
             </File>
+            <File>
+              <FileName>signaling.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\Application\signaling.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -451,6 +456,11 @@
               <FileName>watchdog.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Source\Drivers\watchdog.c</FilePath>
+            </File>
+            <File>
+              <FileName>digital.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Source\Drivers\digital.c</FilePath>
             </File>
           </Files>
         </Group>

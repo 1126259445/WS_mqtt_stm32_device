@@ -2,6 +2,7 @@
 #include "task.h"
 #include "watchdog.h"
 #include "monitor.h"
+#include "signaling.h"
 
 /*Ñ­»·¼à¿ØÏµÍ³×´Ì¬*/
 void monitor_loop(void *pvParameter)
@@ -11,6 +12,9 @@ void monitor_loop(void *pvParameter)
 		vTaskDelay(100);
 		
 		IWDG_Feed();
+		
+		/*ÐÅºÅµÆ100ms */
+		signalingEvent(0);
 	}
 }
 

@@ -51,7 +51,7 @@
 #define TCPIP_THREAD_TEST
 
 /* Enable DHCP to test it, disable UDP checksum to easier inject packets */
-#define LWIP_DHCP                       1
+#define LWIP_DHCP                       0
 
 /* Minimal changes to opt.h required for tcp unit tests: */
 #define MEM_SIZE                        5*1024

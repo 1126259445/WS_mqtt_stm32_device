@@ -14,6 +14,7 @@
 #include "mqtt_client.h"
 #include "SEGGER_RTT.h"
 #include "tick.h"
+#include "signaling.h"
 
 extern err_t ethernetif_init(struct netif *netif);
 extern err_t ethernet_input(struct pbuf *p, struct netif *netif);
@@ -79,6 +80,7 @@ void net_process(void *pvParameter)
 				last_send_time = uwTick;
 				joson_create_uav_data_send();
 			}
+			sigData.nav_status = LED_STATUS_5HZ;
 		}
 		else
 		{
@@ -90,7 +92,8 @@ void net_process(void *pvParameter)
 				mqtt_disconnect(mqtt_client);
 				mqtt_client_free(mqtt_client);
 				mqtt_example_init();
-			}	
+			}
+			sigData.nav_status = LED_STATUS_1HZ;			
 		}
 		
 		/*ÍøÂçÁ¬½Ó×´Ì¬¼à²â*/
