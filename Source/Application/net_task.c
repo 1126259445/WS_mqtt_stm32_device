@@ -4,10 +4,12 @@
 #include "net_task.h"
 #include "lwip/udp.h"
 #include "lwip/init.h"
+#include "lwip/dhcp.h"
 #include "lwip/ip4_addr.h"
 #include "lwip/timeouts.h"
 #include "lwip/apps/mqtt.h"
 #include "lwip/apps/mqtt_priv.h"
+
 
 #include "mqtt_client.h"
 #include "SEGGER_RTT.h"
@@ -25,10 +27,15 @@ struct netif enc28j60_netif;  //定义网络接口
 /*本机网卡配置添加*/
 void LwIP_Config (void)
 {   
+#if LWIP_DHCP                                                           
+	IP4_ADDR(&ipaddr, 0, 0, 0, 0);
+	IP4_ADDR(&gw, 0, 0, 0, 0);
+	IP4_ADDR(&netmask, 0, 0, 0, 0);
+#else 
     IP4_ADDR(&ipaddr, 192, 168, 1, 168);  		//设置本地ip地址
     IP4_ADDR(&gw, 192, 168, 1, 1);			    //网关
     IP4_ADDR(&netmask, 255, 255, 255, 0);		//子网掩码	 
-	
+#endif
 	// 初始化LWIP协议栈,执行检查用户所有可配置的值，初始化所有的模块
 	lwip_init();
 	// 添加网络接口
@@ -38,6 +45,10 @@ void LwIP_Config (void)
 	}
 	netif_set_default(&enc28j60_netif); // 注册默认的网络接口
  	netif_set_up(&enc28j60_netif);      // 建立网络接口用于处理通信
+
+#if LWIP_DHCP
+	dhcp_start(&enc28j60_netif);
+#endif
 }
 
 
